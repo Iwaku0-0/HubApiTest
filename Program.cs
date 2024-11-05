@@ -35,13 +35,15 @@ namespace HubApiTest
 
             while (true)
             {
-                string cmd = Console.ReadLine();
-                string[] split = cmd.Split(' ');
-
-                object result;
                 try
                 {
-                    result = HubFunction(hub, split[0], split.Skip(1).ToArray()).GetAwaiter().GetResult();
+                    string? cmd = Console.ReadLine();
+                    if (string.IsNullOrWhiteSpace(cmd)) continue;
+                    string[] split = cmd.Split(' ');
+
+                    object result = HubFunction(hub, split[0], split.Skip(1).ToArray()).GetAwaiter().GetResult();
+
+                    Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true }));
                 }
                 catch (Exception ex)
                 {
@@ -49,9 +51,6 @@ namespace HubApiTest
                     Console.WriteLine(ex.ToString());
                     continue;
                 }
-                //Console.WriteLine(result);
-                Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true }));
-                //Thread.Sleep(1000);
             }
         }
     }
