@@ -35,10 +35,18 @@ namespace HubApiTest
 
             while (true)
             {
+                Console.ResetColor();
                 try
                 {
+                    Console.WriteLine(hub.ConnectionId);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write("client");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("$ ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     string? cmd = Console.ReadLine();
                     if (string.IsNullOrWhiteSpace(cmd)) continue;
+                    
                     string[] split = cmd.Split(' ');
 
                     object result = HubFunction(hub, split[0], split.Skip(1).ToArray()).GetAwaiter().GetResult();
@@ -47,8 +55,11 @@ namespace HubApiTest
                 }
                 catch (Exception ex)
                 {
+                    Console.Beep();
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Error occured while processing command!");
                     Console.WriteLine(ex.ToString());
+                    Console.WriteLine(ex.Data.ToString());
                     continue;
                 }
             }
